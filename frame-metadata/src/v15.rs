@@ -15,6 +15,8 @@
 
 #[cfg(feature = "decode")]
 use codec::Decode;
+#[cfg(all(feature = "serde_full", feature = "decode"))]
+use serde::Deserialize;
 #[cfg(feature = "serde_full")]
 use serde::Serialize;
 
@@ -45,6 +47,7 @@ impl From<RuntimeMetadataLastVersion> for super::RuntimeMetadataPrefixed {
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
 #[cfg_attr(feature = "serde_full", derive(Serialize))]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct RuntimeMetadataV15 {
 	/// Type registry containing all types used in the metadata.
 	pub types: PortableRegistry,
@@ -95,11 +98,13 @@ impl RuntimeMetadataV15 {
 /// Metadata of a runtime trait.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>, T::String: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct RuntimeApiMetadata<T: Form = MetaForm> {
 	/// Trait name.
 	pub name: T::String,
@@ -124,11 +129,13 @@ impl IntoPortable for RuntimeApiMetadata {
 /// Metadata of a runtime method.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>, T::String: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct RuntimeApiMethodMetadata<T: Form = MetaForm> {
 	/// Method name.
 	pub name: T::String,
@@ -156,11 +163,13 @@ impl IntoPortable for RuntimeApiMethodMetadata {
 /// Metadata of a runtime method parameter.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>, T::String: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct RuntimeApiMethodParamMetadata<T: Form = MetaForm> {
 	/// Parameter name.
 	pub name: T::String,
@@ -182,11 +191,13 @@ impl IntoPortable for RuntimeApiMethodParamMetadata {
 /// Metadata of the extrinsic used by the runtime.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>, T::String: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct ExtrinsicMetadata<T: Form = MetaForm> {
 	/// Extrinsic version.
 	pub version: u8,
@@ -220,11 +231,13 @@ impl IntoPortable for ExtrinsicMetadata {
 /// Metadata of an extrinsic's signed extension.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>, T::String: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct SignedExtensionMetadata<T: Form = MetaForm> {
 	/// The unique signed extension identifier, which may be different from the type name.
 	pub identifier: T::String,
@@ -249,11 +262,13 @@ impl IntoPortable for SignedExtensionMetadata {
 /// All metadata about an runtime pallet.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>, T::String: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct PalletMetadata<T: Form = MetaForm> {
 	/// Pallet name.
 	pub name: T::String,
@@ -296,11 +311,13 @@ impl IntoPortable for PalletMetadata {
 /// This map associates a string key to a `CustomValueMetadata`.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>, T::String: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct CustomMetadata<T: Form = MetaForm> {
 	/// The custom map.
 	pub map: BTreeMap<T::String, CustomValueMetadata<T>>,
@@ -323,11 +340,13 @@ impl IntoPortable for CustomMetadata {
 /// The associated value of a custom metadata type.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct CustomValueMetadata<T: Form = MetaForm> {
 	/// The custom type.
 	pub ty: T::Type,
@@ -349,11 +368,13 @@ impl IntoPortable for CustomValueMetadata {
 /// The type of the outer enums.
 #[derive(Clone, PartialEq, Eq, Encode, Debug)]
 #[cfg_attr(feature = "decode", derive(Decode))]
-#[cfg_attr(feature = "serde_full", derive(Serialize))]
 #[cfg_attr(
 	feature = "serde_full",
-	serde(bound(serialize = "T::Type: Serialize, T::String: Serialize"))
+	derive(Serialize),
+	serde(bound(serialize = "T::Type: Serialize")),
+	serde(bound(deserialize = "T::Type: Deserialize<'de>"))
 )]
+#[cfg_attr(all(feature = "serde_full", feature = "decode"), derive(Deserialize))]
 pub struct OuterEnums<T: Form = MetaForm> {
 	/// The type of the outer `RuntimeCall` enum.
 	pub call_enum_ty: T::Type,
